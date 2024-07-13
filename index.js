@@ -13,7 +13,7 @@ app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);
 
 mongoose
-  .connect(`${process.env.DB_KEY}`)
+  .connect("mongodb://localhost:27017/StoreDatabase")
   .then(() => {
     console.log("Connected to the database");
     app.listen(3000, () => {
