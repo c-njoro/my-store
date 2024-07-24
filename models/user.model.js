@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     required: false,
   },
-  favouriteProducts: [
+  favoriteProducts: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",

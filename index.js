@@ -4,10 +4,12 @@ require("dotenv").config();
 const Product = require("./models/product.model");
 const productRoute = require("./routes/product.route");
 const userRoute = require("./routes/user.route");
+const cors = require("cors");
 
 //the app and its usings, and also the router
 const app = express();
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);

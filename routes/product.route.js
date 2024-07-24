@@ -7,19 +7,23 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
+  fetchBulk,
 } = require("../controllers/product.controller");
 
 //getting all
 router.get("/", getAllProducts);
-router.get("/:id", getSingleProducts);
+router.get("/findbyid", getSingleProducts);
 
 //adding products
 router.post("/", createProduct);
 
 //updating products
-router.put("/:id", updateProduct);
+router.put("/update", updateProduct);
 
 //deleting products
-router.delete("/:id", deleteProduct);
+router.delete("/delete", deleteProduct);
+
+//fetch bulk
+router.post("/bulk", fetchBulk);
 
 module.exports = router;

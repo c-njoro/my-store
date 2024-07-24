@@ -7,19 +7,28 @@ const {
   deleteUser,
   getAllUsers,
   getSingleUser,
+  findUser,
+  addFavorite,
 } = require("../controllers/user.controller");
+const { findOne } = require("../models/product.model");
 
 //adding user
 userRouter.post("/", createUser);
 
 //updating user
-userRouter.put("/:id", updateUser);
+userRouter.put("/updateUser/:id", updateUser);
 
 //deleting user
-userRouter.delete("/:id", deleteUser);
+userRouter.delete("/deleteUser", deleteUser);
 
 //getting users
 userRouter.get("/", getAllUsers);
-userRouter.get("/:id", getSingleUser);
+// userRouter.get("/findById", getSingleUser);
+
+//finding one
+userRouter.get("/find", findUser);
+
+//addingFavorite
+userRouter.put("/addFavorite", addFavorite);
 
 module.exports = userRouter;

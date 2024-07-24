@@ -1,11 +1,32 @@
+const res = require("express/lib/response");
 const User = require("../models/user.model");
 
 //creating a new user
 
 const createUser = async (req, res) => {
   try {
-    const newUser = await User.create(req.body);
-    res.status(200).json(newUser);
+    const duplicate = await User.findOne({ email: req.body.email });
+    if (duplicate) {
+      return res.status(409).json({ message: "User already exists" });
+    }
+
+    if (
+      !req.body.email ||
+      !req.body.name ||
+      !req.body.username ||
+      !req.body.password
+    ) {
+      return res.status(400).json({ message: "Crucial user Info missing" });
+    }
+    // const bodyData = req.body;
+    // console.log(req.body);
+    // console.log(JSON.stringify(bodyData));
+    // const hashPass = await bcrypt.hash(body.password, 10);
+    // bodyData.password = hashPass;
+    // console.log(bodyData);
+    await User.create(req.body);
+    res.status(200).json({ message: "User created succesfuly" });
+    console.log("User added successfully");
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -16,15 +37,6 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { favouriteProducts } = req.body;
-
-    if (favouriteProducts) {
-      const updatedUser = await User.findByIdAndUpdate(id, {
-        $addToSet: { favouriteProducts: { $each: favouriteProducts } },
-      });
-      return res.status(200).json(updatedUser);
-    }
-
     const updatedUser = await User.findByIdAndUpdate(id, req.body);
     if (!updatedUser) {
       return res.status(404).json({ message: "Could not find the user" });
@@ -65,10 +77,48 @@ const getAllUsers = async (req, res) => {
 
 const getSingleUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const user = await User.findById(id);
     res.status(200).json(user);
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//find user
+const findUser = async (req, res) => {
+  try {
+    const { email } = req.query;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const addFavorite = async (req, res) => {
+  const email = req.body.email;
+  const id = req.body.id;
+  console.log(`Received email: ${email}, id: ${id}`);
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.favoriteProducts.includes(id)) {
+      user.favoriteProducts.push(id);
+      await user.save();
+      return res.status(201).json(user.favoriteProducts);
+    } else {
+      return res.status(408).json(user.favoriteProducts);
+    }
+  } catch (error) {
+    console.error("Error in addFavorite:", error.message);
     res.status(500).json({ message: error.message });
   }
 };
@@ -79,4 +129,6 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  findUser,
+  addFavorite,
 };
