@@ -23,6 +23,13 @@ const getSingleProducts = async (req, res) => {
 //about creating new products
 const createProduct = async (req, res) => {
   try {
+    const existing = await Product.find({ name: req.body.name });
+
+    // if (existing) {
+    //   return res
+    //     .status(409)
+    //     .json({ message: "Product already exists in the store" });
+    // }
     const product = await Product.create(req.body);
     res.status(200).json(product);
   } catch (error) {
@@ -88,8 +95,28 @@ const fetchBulk = async (req, res) => {
         .json({ message: "Invalid request: ids should be an array" });
     }
 
-    const products = await Product.find({ _id: { $in: ids } });
-    res.status(200).json(products);
+    // Count occurrences of each ID
+    const idCounts = ids.reduce((acc, id) => {
+      acc[id] = (acc[id] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Fetch unique products by ID
+    const uniqueIds = Object.keys(idCounts);
+    const products = await Product.find({ _id: { $in: uniqueIds } });
+
+    // Create a map of product ID to product object
+    const productMap = products.reduce((acc, product) => {
+      acc[product._id.toString()] = product;
+      return acc;
+    }, {});
+
+    // Build the result array including duplicates
+    const result = ids
+      .map((id) => productMap[id.toString()])
+      .filter((product) => product !== undefined);
+
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

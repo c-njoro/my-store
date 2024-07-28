@@ -100,10 +100,11 @@ const findUser = async (req, res) => {
   }
 };
 
+//adding a product to fav
 const addFavorite = async (req, res) => {
   const email = req.body.email;
   const id = req.body.id;
-  console.log(`Received email: ${email}, id: ${id}`);
+
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -123,6 +124,78 @@ const addFavorite = async (req, res) => {
   }
 };
 
+//remove a favorite
+const removeFavorite = async (req, res) => {
+  const email = req.body.email;
+  const id = req.body.id;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.favoriteProducts.includes(id)) {
+      return res
+        .status(201)
+        .json({ message: "Product not in the favorites...." });
+    } else {
+      const userId = user._id;
+      await User.findByIdAndUpdate(
+        userId,
+        { $pull: { favoriteProducts: id } },
+        { new: true }
+      );
+
+      res.status(200).json(user.favoriteProducts);
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//incrreasing count in fav
+const increaseInFavorites = async (req, res) => {
+  const email = req.body.email;
+  const id = req.body.id;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.favoriteProducts.push(id);
+    await user.save();
+    return res.status(201).json(user.favoriteProducts);
+  } catch (error) {
+    console.error("Error in addFavorite:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+////reducing count in fav
+const reduceInFavorites = async (req, res) => {
+  const email = req.body.email;
+  const id = req.body.id;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const index = user.favoriteProducts.indexOf(id);
+    if (index !== -1) {
+      user.favoriteProducts.splice(index, 1);
+      await user.save();
+      return res.status(200).json({ message: "Reduced one successfully" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getSingleUser,
@@ -131,4 +204,7 @@ module.exports = {
   deleteUser,
   findUser,
   addFavorite,
+  removeFavorite,
+  increaseInFavorites,
+  reduceInFavorites,
 };

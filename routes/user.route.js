@@ -9,6 +9,9 @@ const {
   getSingleUser,
   findUser,
   addFavorite,
+  removeFavorite,
+  increaseInFavorites,
+  reduceInFavorites,
 } = require("../controllers/user.controller");
 const { findOne } = require("../models/product.model");
 
@@ -30,5 +33,14 @@ userRouter.get("/find", findUser);
 
 //addingFavorite
 userRouter.put("/addFavorite", addFavorite);
+
+//remove from favorites
+userRouter.post("/removeFavorite", removeFavorite);
+
+//increase favorite
+userRouter.put("/increaseFavorite", increaseInFavorites);
+
+//reduce in favorites
+userRouter.post("/reduceFavorite", reduceInFavorites);
 
 module.exports = userRouter;
