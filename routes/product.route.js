@@ -8,6 +8,7 @@ const {
   updateProduct,
   deleteProduct,
   fetchBulk,
+  addImages,
 } = require("../controllers/product.controller");
 
 //getting all
@@ -18,12 +19,15 @@ router.get("/findbyid", getSingleProducts);
 router.post("/", createProduct);
 
 //updating products
-router.put("/update", updateProduct);
+router.put("/update/:id", updateProduct);
 
 //deleting products
 router.delete("/delete", deleteProduct);
 
 //fetch bulk
 router.post("/bulk", fetchBulk);
+
+//add images
+router.post("/addImages", addImages);
 
 module.exports = router;

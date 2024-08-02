@@ -23,13 +23,6 @@ const getSingleProducts = async (req, res) => {
 //about creating new products
 const createProduct = async (req, res) => {
   try {
-    const existing = await Product.find({ name: req.body.name });
-
-    // if (existing) {
-    //   return res
-    //     .status(409)
-    //     .json({ message: "Product already exists in the store" });
-    // }
     const product = await Product.create(req.body);
     res.status(200).json(product);
   } catch (error) {
@@ -122,6 +115,27 @@ const fetchBulk = async (req, res) => {
   }
 };
 
+//adding images to a product
+const addImages = async (req, res) => {
+  const { id, images } = req.body;
+
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Add new images to the product's images array
+    product.images = [...product.images, ...images];
+    await product.save();
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error("Error updating product images:", error);
+    res.status(500).json({ message: "Failed to add images" });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getSingleProducts,
@@ -129,4 +143,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   fetchBulk,
+  addImages,
 };

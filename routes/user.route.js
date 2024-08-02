@@ -1,6 +1,7 @@
 const express = require("express");
 const userRouter = express.Router();
 const User = require("../models/user.model");
+
 const {
   createUser,
   updateUser,
@@ -13,9 +14,9 @@ const {
   increaseInFavorites,
   reduceInFavorites,
 } = require("../controllers/user.controller");
-const { findOne } = require("../models/product.model");
 
 //adding user
+// userRouter.post("/", upload.single("profilePicture"), createUser);
 userRouter.post("/", createUser);
 
 //updating user
@@ -26,7 +27,7 @@ userRouter.delete("/deleteUser", deleteUser);
 
 //getting users
 userRouter.get("/", getAllUsers);
-// userRouter.get("/findById", getSingleUser);
+userRouter.get("/findById", getSingleUser);
 
 //finding one
 userRouter.get("/find", findUser);
