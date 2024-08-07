@@ -34,17 +34,6 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { reviews } = req.body;
-
-    if (reviews) {
-      const updatedProduct = await Product.findByIdAndUpdate(
-        id,
-        { $push: { reviews: { $each: reviews } } },
-        { new: true, useFindAndModify: false }
-      );
-
-      return res.status(200).json(updatedProduct);
-    }
 
     const product = await Product.findByIdAndUpdate(id, req.body);
 

@@ -13,7 +13,7 @@ const {
 
 //getting all
 router.get("/", getAllProducts);
-router.get("/findbyid", getSingleProducts);
+router.get("/findbyid/:id", getSingleProducts);
 
 //adding products
 router.post("/", createProduct);
