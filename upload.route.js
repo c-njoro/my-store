@@ -34,7 +34,7 @@ uploadRouter.post(
     try {
       let fileInfos = req.files.map((file) => ({
         public_id: file.filename,
-        url: file.path,
+        url: `http://localhost:3000/${file.path}`,
       }));
       res.status(200).json({ fileInfos });
     } catch (error) {

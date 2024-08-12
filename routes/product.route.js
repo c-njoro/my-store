@@ -22,7 +22,7 @@ router.post("/", createProduct);
 router.put("/update/:id", updateProduct);
 
 //deleting products
-router.delete("/delete", deleteProduct);
+router.delete("/delete/:id", deleteProduct);
 
 //fetch bulk
 router.post("/bulk", fetchBulk);

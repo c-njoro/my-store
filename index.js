@@ -14,7 +14,11 @@ const bodyParser = require("body-parser");
 //the app and its usings, and also the router
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    exposedHeaders: ["Content-Range"],
+  })
+);
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);

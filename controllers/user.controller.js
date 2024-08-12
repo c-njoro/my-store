@@ -2,6 +2,7 @@ const res = require("express/lib/response");
 const User = require("../models/user.model");
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcrypt");
 
 //creating a new user
 
@@ -21,7 +22,15 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: "Crucial user Info missing" });
     }
 
-    const newUser = await User.create(req.body);
+    const hashedPass = bcrypt.hashSync(req.body.password, 10);
+
+    const newUser = await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      username: req.body.username,
+      dateOfBirth: req.body.dateOfBirth,
+      password: hashedPass,
+    });
     res.status(200).json(newUser);
     console.log("User added successfully");
   } catch (error) {
@@ -47,6 +56,7 @@ const updateUser = async (req, res) => {
 //deleting user
 
 const deleteUser = async (req, res) => {
+  const { id } = req.params;
   try {
     const deletedUser = await User.findByIdAndDelete(id);
 
@@ -74,7 +84,7 @@ const getAllUsers = async (req, res) => {
 
 const getSingleUser = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const user = await User.findById(id);
     res.status(200).json(user);
   } catch (error) {

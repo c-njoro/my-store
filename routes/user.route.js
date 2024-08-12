@@ -20,14 +20,14 @@ const {
 userRouter.post("/", createUser);
 
 //updating user
-userRouter.put("/updateUser/:id", updateUser);
+userRouter.put("/update/:id", updateUser);
 
 //deleting user
-userRouter.delete("/deleteUser", deleteUser);
+userRouter.delete("/delete/:id", deleteUser);
 
 //getting users
 userRouter.get("/", getAllUsers);
-userRouter.get("/findById", getSingleUser);
+userRouter.get("/findById/:id", getSingleUser);
 
 //finding one
 userRouter.get("/find", findUser);
