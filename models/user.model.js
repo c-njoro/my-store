@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { type } = require("express/lib/response");
 const Product = require("./product.model");
+const Order = require("../models/order.model");
 
 const userSchema = new mongoose.Schema({
   name: {

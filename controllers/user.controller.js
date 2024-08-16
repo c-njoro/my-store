@@ -22,14 +22,13 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: "Crucial user Info missing" });
     }
 
-    const hashedPass = bcrypt.hashSync(req.body.password, 10);
-
     const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
       username: req.body.username,
       dateOfBirth: req.body.dateOfBirth,
-      password: hashedPass,
+      password: req.body.password,
+      profilePicture: "",
     });
     res.status(200).json(newUser);
     console.log("User added successfully");

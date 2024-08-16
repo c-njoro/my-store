@@ -4,6 +4,7 @@ require("dotenv").config();
 const Product = require("./models/product.model");
 const productRoute = require("./routes/product.route");
 const userRoute = require("./routes/user.route");
+const orderRoute = require("./routes/order.route");
 const uploadRouter = require("./upload.route");
 const cors = require("cors");
 const multer = require("multer");
@@ -22,6 +23,7 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);
+app.use("/api/orders", orderRoute);
 app.use("/", uploadRouter);
 app.use(bodyParser.json()); // For JSON payloads
 app.use(bodyParser.urlencoded({ extended: true }));
