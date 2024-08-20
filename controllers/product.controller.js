@@ -3,7 +3,30 @@ const Product = require("../models/product.model");
 //about getting products data
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const { name, price, stock, category } = req.query;
+
+    const query = {};
+
+    // Filter by name (case-insensitive)
+    if (name) {
+      query.name = { $regex: name, $options: "i" };
+    }
+
+    // Filter by exact price
+    if (price) {
+      query.price = Number(price);
+    }
+
+    // Filter by exact stock
+    if (stock) {
+      query.stock = Number(stock);
+    }
+
+    // Filter by exact category
+    if (category) {
+      query.category = category;
+    }
+    const products = await Product.find(query);
 
     res.setHeader("Content-Range", `items 0-5/${products.length - 1}`);
     res.status(200).json(products);

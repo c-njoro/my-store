@@ -73,7 +73,19 @@ const deleteUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    const { name, role } = req.query;
+    const query = {};
+
+    // Filter by name (case-insensitive)
+    if (name) {
+      query.name = { $regex: name, $options: "i" };
+    }
+
+    if (role) {
+      query.role = { $regex: role, $options: "i" };
+    }
+
+    const users = await User.find(query);
 
     res.status(200).json(users);
   } catch (error) {

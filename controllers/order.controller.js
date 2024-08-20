@@ -2,7 +2,23 @@ const Order = require("../models/order.model");
 
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find({});
+    const { orderStatus, paymentStatus, trackingNumber } = req.query;
+    const query = {};
+
+    // Filter by name (case-insensitive)
+    if (trackingNumber) {
+      query.trackingNumber = { $regex: trackingNumber, $options: "i" };
+    }
+
+    if (paymentStatus) {
+      query.paymentStatus = { $regex: paymentStatus, $options: "i" };
+    }
+
+    if (orderStatus) {
+      query.orderStatus = { $regex: orderStatus, $options: "i" };
+    }
+
+    const orders = await Order.find(query);
 
     res.setHeader("Content-Range", `items 0-5/${orders.length - 1}`);
     res.status(200).json(orders);
