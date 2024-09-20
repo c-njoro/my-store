@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const express = require("express");
-require("dotenv").config();
+require("dotenv").config({ path: "./backend/.env" });
 const Product = require("./models/product.model");
 const productRoute = require("./routes/product.route");
 const userRoute = require("./routes/user.route");
@@ -20,6 +20,7 @@ app.use(
     exposedHeaders: ["Content-Range"],
   })
 );
+app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);
