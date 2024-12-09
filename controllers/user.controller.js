@@ -1,8 +1,5 @@
-const res = require("express/lib/response");
 const User = require("../models/user.model");
 const express = require("express");
-const router = express.Router();
-const bcrypt = require("bcrypt");
 
 //creating a new user
 
@@ -31,7 +28,6 @@ const createUser = async (req, res) => {
       profilePicture: "",
     });
     res.status(200).json(newUser);
-    console.log("User added successfully");
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
