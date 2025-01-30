@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const express = require("express");
-require("dotenv").config({ path: "./backend/.env" });
+require("dotenv").config();
 const Product = require("./models/product.model");
 const productRoute = require("./routes/product.route");
 const userRoute = require("./routes/user.route");
@@ -34,13 +34,13 @@ app.use("/uploader", express.static(__dirname + "/uploads"));
 app.use("/productImages", express.static(__dirname + "/productImages"));
 
 mongoose
-  .connect(`${process.env.LOCAL_KEY}`)
+  .connect(`${process.env.LIVE_KEY}`)
   .then(() => {
     console.log("Connected to the database");
     app.listen(process.env.PORT, () => {
       console.log(`Server is running on port ${process.env.PORT}`);
     });
   })
-  .catch(() => {
-    console.log("Error connecting to the database");
+  .catch((error) => {
+    console.log("Error connecting to the database: ", error);
   });
