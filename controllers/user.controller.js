@@ -39,9 +39,11 @@ const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const updatedUser = await User.findByIdAndUpdate(id, req.body);
+
     if (!updatedUser) {
       return res.status(404).json({ message: "Could not find the user" });
     }
+
     res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -151,7 +153,7 @@ const removeFavorite = async (req, res) => {
 
     if (!user.favoriteProducts.includes(id)) {
       return res
-        .status(201)
+        .status(405)
         .json({ message: "Product not in the favorites...." });
     } else {
       const userId = user._id;
