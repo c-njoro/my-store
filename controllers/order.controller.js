@@ -20,12 +20,15 @@ const getAllOrders = async (req, res) => {
     }
 
     if (customerId) {
-      query.customerId = { $regex: customerId, $options: "i" };
+      query.customerId = customerId;
     }
 
     const orders = await Order.find(query);
 
-    res.setHeader("Content-Range", `items 0-5/${orders.length - 1}`);
+    res.setHeader(
+      "Content-Range",
+      `items 0-${orders.length - 1}/${orders.length}`
+    );
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
