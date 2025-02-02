@@ -11,6 +11,7 @@ const multer = require("multer");
 const path = require("path");
 
 const bodyParser = require("body-parser");
+const runCronJobs = require("./cronJobs");
 
 //the app and its usings, and also the router
 const app = express();
@@ -36,6 +37,7 @@ app.use("/productImages", express.static(__dirname + "/productImages"));
 mongoose
   .connect(`${process.env.LIVE_KEY}`)
   .then(() => {
+    runCronJobs();
     console.log("Connected to the database");
     app.listen(process.env.PORT, () => {
       console.log(`Server is running on port ${process.env.PORT}`);
