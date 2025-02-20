@@ -21,7 +21,6 @@ const createUser = async (req, res) => {
     ) {
       return res.status(400).json({ message: "Crucial user Info missing" });
     }
-
     const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
@@ -36,6 +35,45 @@ const createUser = async (req, res) => {
   }
 };
 
+//create user for mobile users
+const createMobileUser = async (req, res) => {
+  try {
+    const duplicate = await User.findOne({ email: req.body.email });
+    if (duplicate) {
+      return res.status(409).json({ message: "User already exists" });
+    }
+
+    if (
+      !req.body.email ||
+      !req.body.name ||
+      !req.body.username ||
+      !req.body.password
+    ) {
+      return res.status(400).json({ message: "Crucial user Info missing" });
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    const newUser = await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      username: req.body.username,
+      password: hashedPassword,
+      profilePicture: "",
+    });
+    res.status(200).json(newUser);
+  } catch (error) {
+    console.log(error);
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: "This username already exists.",
+        field: error.keyValue,
+      });
+    }
+
+    return res.status(500).json({ message: error });
+  }
+};
 //updating user
 
 const updateUser = async (req, res) => {
@@ -215,6 +253,7 @@ const reduceInFavorites = async (req, res) => {
   }
 };
 
+//login user
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -264,4 +303,5 @@ module.exports = {
   increaseInFavorites,
   reduceInFavorites,
   loginUser,
+  createMobileUser,
 };

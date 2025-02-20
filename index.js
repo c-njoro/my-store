@@ -35,7 +35,7 @@ app.use("/uploader", express.static(__dirname + "/uploads"));
 app.use("/productImages", express.static(__dirname + "/productImages"));
 
 mongoose
-  .connect(`${process.env.LIVE_KEY}`)
+  .connect(`${process.env.LOCAL_KEY}`)
   .then(() => {
     // runCronJobs();
     console.log("Connected to the database");

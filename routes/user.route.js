@@ -14,11 +14,15 @@ const {
   increaseInFavorites,
   reduceInFavorites,
   loginUser,
+  createMobileUser,
 } = require("../controllers/user.controller");
 
 //adding user
 // userRouter.post("/", upload.single("profilePicture"), createUser);
 userRouter.post("/", createUser);
+
+//create mobile user
+userRouter.post("/mobileUser", createMobileUser);
 
 //updating user
 userRouter.put("/update/:id", updateUser);
