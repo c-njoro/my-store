@@ -1,5 +1,8 @@
 const User = require("../models/user.model");
 const express = require("express");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 //creating a new user
 
@@ -212,6 +215,43 @@ const reduceInFavorites = async (req, res) => {
   }
 };
 
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // 3️⃣ Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email, role: user.role }, // Payload
+      process.env.JWT_SECRET, // Secret Key
+      { expiresIn: "7d" } // Token Expiry
+    );
+
+    // 4️⃣ Return token & user data (excluding password)
+    res.status(200).json({
+      token,
+      user: {
+        _id: user._id,
+        email: user.email,
+        role: user.role,
+        name: user.name,
+        username: user.username,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: `${error}` });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getSingleUser,
@@ -223,4 +263,5 @@ module.exports = {
   removeFavorite,
   increaseInFavorites,
   reduceInFavorites,
+  loginUser,
 };

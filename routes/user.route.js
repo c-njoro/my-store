@@ -13,6 +13,7 @@ const {
   removeFavorite,
   increaseInFavorites,
   reduceInFavorites,
+  loginUser,
 } = require("../controllers/user.controller");
 
 //adding user
@@ -43,5 +44,8 @@ userRouter.put("/increaseFavorite", increaseInFavorites);
 
 //reduce in favorites
 userRouter.post("/reduceFavorite", reduceInFavorites);
+
+//login
+userRouter.post("/login", loginUser);
 
 module.exports = userRouter;
