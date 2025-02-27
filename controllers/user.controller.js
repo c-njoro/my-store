@@ -31,6 +31,12 @@ const createUser = async (req, res) => {
     });
     res.status(200).json(newUser);
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(422).json({
+        message: "This username already exists.",
+        field: error.keyValue,
+      });
+    }
     res.status(500).json({ message: error.message });
   }
 };
@@ -65,7 +71,7 @@ const createMobileUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     if (error.code === 11000) {
-      return res.status(400).json({
+      return res.status(422).json({
         message: "This username already exists.",
         field: error.keyValue,
       });
