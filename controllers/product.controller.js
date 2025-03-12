@@ -150,6 +150,34 @@ const addImages = async (req, res) => {
   }
 };
 
+//updating stock after purchase
+const updateStock = async (req, res) => {
+  const { id, quantity } = req.body;
+
+  if (!id || !quantity) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Check if there is enough stock
+    if (product.stock < quantity) {
+      return res.status(400).json({ message: "Not enough stock" });
+    }
+
+    // Update stock
+    product.stock -= quantity;
+    await product.save();
+    return res.status(200).json(product);
+  } catch (error) {
+    console.error("Error updating product stock:", error);
+    res.status(500).json({ message: "Failed to update stock" });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getSingleProducts,
@@ -158,4 +186,5 @@ module.exports = {
   deleteProduct,
   fetchBulk,
   addImages,
+  updateStock,
 };

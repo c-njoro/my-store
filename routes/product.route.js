@@ -9,6 +9,7 @@ const {
   deleteProduct,
   fetchBulk,
   addImages,
+  updateStock,
 } = require("../controllers/product.controller");
 
 //getting all
@@ -29,5 +30,8 @@ router.post("/bulk", fetchBulk);
 
 //add images
 router.post("/addImages", addImages);
+
+//update stock
+router.post("/updateStock", updateStock);
 
 module.exports = router;
